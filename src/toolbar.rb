@@ -1,5 +1,6 @@
 require 'actor'
 require 'actor_view'
+require 'publisher'
 
 class ToolbarView < ActorView
   def draw(target, x_off, y_off)
@@ -8,6 +9,9 @@ class ToolbarView < ActorView
   end
 end
 class Toolbar < Actor
+  extend Publisher
+  can_fire :cast_spell
+
   has_behavior :layered => 2
 
   attr_accessor :w, :h
@@ -15,5 +19,8 @@ class Toolbar < Actor
     @w = 600
     @h = 160
     button = spawn :button, :x => @x+10, :y => @y+10
+    button.when :clicked do
+      fire :cast_spell, :win
+    end
   end
 end
