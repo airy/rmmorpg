@@ -9,6 +9,8 @@ class ButtonView < ActorView
 end
 
 class Button < Actor
+  has_behavior :layered => 3
+
   attr_accessor :w, :h
   def setup
     # register for events here
