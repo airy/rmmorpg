@@ -17,7 +17,12 @@ class ButtonView < ActorView
     @image.blit target.screen, [x,y]
     
     if @actor.cooling_down?
-      target.draw_box_s [x_off+@actor.x,y_off+@actor.y], [x_off+@actor.x+@actor.w,y_off+@actor.y+@actor.h], [0,0,0, 155]
+      scale = @actor.cooling_down/Button::COOLDOWN.to_f
+      cool_h = @actor.h*scale
+      cool_w = @actor.w*scale
+      start_x = x+((@actor.w-cool_w)/2.0)
+      start_y = y+((@actor.h-cool_h)/2.0)
+      target.draw_box_s [start_x,start_y], [start_x+cool_w,start_y+cool_h], [0,0,0, 155]
     end
   end
 end
@@ -32,7 +37,7 @@ class Button < Actor
   has_behaviors :updatable,
     :layered => 3
 
-  attr_accessor :w, :h, :name
+  attr_accessor :w, :h, :name, :cooling_down
   def setup
     # register for events here
     # or pull stuff out of @opts
