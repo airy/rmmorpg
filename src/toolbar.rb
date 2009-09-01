@@ -18,9 +18,17 @@ class Toolbar < Actor
   def setup
     @w = 600
     @h = 160
-    button = spawn :button, :x => @x+10, :y => @y+10
+    button_width = 70
+    button_height = 70
+
+    button = spawn :button, :x => @x+10, :y => @y+10, :name => "WIN", :w => button_width, :h => button_height, :cooldown => 2000
     button.when :clicked do
       fire :cast_spell, :win
+    end
+
+    button = spawn :button, :x => @x+button_width+20, :y => @y+10, :name => "LOSE", :w => button_width, :h => button_height, :cooldown => 3000
+    button.when :clicked do
+      fire :cast_spell, :lose
     end
   end
 end

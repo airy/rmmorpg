@@ -17,7 +17,7 @@ class ButtonView < ActorView
     @image.blit target.screen, [x,y]
     
     if @actor.cooling_down?
-      scale = @actor.cooling_down/Button::COOLDOWN.to_f
+      scale = @actor.cooling_down/@actor.default_cooldown.to_f
       cool_h = @actor.h*scale
       cool_w = @actor.w*scale
       start_x = x+((@actor.w-cool_w)/2.0)
@@ -31,20 +31,18 @@ class Button < Actor
   extend Publisher
   can_fire :clicked
 
-  # 2 sec cooldown
-  COOLDOWN = 2000
-
   has_behaviors :updatable,
     :layered => 3
 
-  attr_accessor :w, :h, :name, :cooling_down
+  attr_accessor :w, :h, :name, :cooling_down, :default_cooldown
   def setup
     # register for events here
     # or pull stuff out of @opts
-    @w = 60
-    @h = 60
+    @w = @opts[:w]
+    @h = @opts[:h]
     @cooling_down = 0
-    @name = "WIN"
+    @default_cooldown = @opts[:cooldown]
+    @name = @opts[:name]
 
 
     i = input_manager
@@ -54,7 +52,7 @@ class Button < Actor
         my = evt.pos[1]
         if @x <= mx && mx <= (@x+@w)
           if @y <= my && my <= (@y+@h)
-            @cooling_down = COOLDOWN
+            @cooling_down = @default_cooldown
             fire :clicked 
           end
         end
